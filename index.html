@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fund Transfer</title>
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <section class="whole-section">
+        <div class="container">
+            <div class="main-div bg-white">
+                <button class="cross">
+                    <img src="assets/images/cross.svg" alt="" class="icon">
+                </button>
+                <img src="assets/images/paypal-logo.svg" alt="" class="img-responsive">
+                <div class="amt-fle flex space-between gap-20 mt-20">
+                    <div class="left">
+                        <h3>Account Balance:</h3>
+                        <div class="amt mt-10" id="accountBalance">$415,188,350 USD</div>
+                    </div>
+                    <div class="right">
+                        <div class="send-grid">
+                            <h3>Send To:</h3>
+                            <input type="text" id="recipientInput">
+                        </div>
+                        <div class="send-grid mt-10">
+                            <h3>Amount:</h3>
+                            <input type="text" id="amountInput">
+                            <div>USD</div>
+                        </div>
+                        <div class="mt-10 flex justify-end">
+                            <a href="#test-modal" class="btn popup-modal" id="transferButton">Transfer Funds</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <img src="assets/images/men-with-lion.jpeg" alt="" class="img-responsive">
+        </div>
+    </section>
+
+    <div id="test-modal" class="mfp-hide white-popup-block">
+        <div class="pop-content">
+            <img src="assets/images/tick.svg" alt="" class="icon">
+            <h3 id="modalMessage"></h3>
+            <p>Transaction will be made in a few minutes. It may take a few minutes.</p>
+            <div class="mt-30"><a class="popup-modal-dismiss" href="#">Return to main page</a></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="assets/js/jquery.magnific-popup.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const accountBalance = document.getElementById("accountBalance");
+            const recipientInput = document.getElementById("recipientInput");
+            const amountInput = document.getElementById("amountInput");
+            const transferButton = document.getElementById("transferButton");
+            const modalMessage = document.getElementById("modalMessage");
+
+            transferButton.addEventListener("click", function (e) {
+                e.preventDefault();
+                const recipient = recipientInput.value.trim();
+                const amount = parseFloat(amountInput.value.trim());
+
+                if (!recipient || isNaN(amount) || amount <= 0) {
+                    alert("Please enter a valid recipient and amount.");
+                    return;
+                }
+
+                const currentBalance = parseFloat(accountBalance.textContent.replace(/[^0-9.]/g, ""));
+                if (amount > currentBalance) {
+                    alert("Insufficient funds for this transfer.");
+                } else {
+                    const updatedBalance = currentBalance - amount;
+                    accountBalance.textContent = "$" + updatedBalance.toFixed(2) + " USD";
+
+                    modalMessage.textContent = `You've sent $${amount.toFixed(2)} USD to ${recipient}`;
+                    $.magnificPopup.open({
+                        items: {
+                            src: '#test-modal'
+                        },
+                        type: 'inline'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
